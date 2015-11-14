@@ -13,12 +13,12 @@ class EntryHandler(tornado.web.RequestHandler):
 class PicturesHandler(tornado.web.RequestHandler):
     def get(self, id, name):
         self.write("Hello " + name + " with id " + id)
-
+        
 def main():
     return tornado.web.Application([
         (r"/", MainHandler),
-	(r"/addEntry", EntryHandler),
-        (r"/pictures/([0-9]+)/([a-z]+)", PicturesHandler), 
+	(r"/addEntry/", EntryHandler),
+        (r"/pictures/(.+),([0-9]+))", PicturesHandler), 
     ])
 
 if __name__ == "__main__":
