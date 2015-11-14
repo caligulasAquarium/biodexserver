@@ -18,7 +18,7 @@ def main():
     return tornado.web.Application([
         (r"/", MainHandler),
 	(r"/addEntry/", EntryHandler),
-        (r"/pictures/(.+),([0-9]+))", PicturesHandler), 
+        (r"/pictures/(.+),([0-9]+)", PicturesHandler), 
     ])
 
 if __name__ == "__main__":
