@@ -8,14 +8,7 @@ class MainHandler(tornado.web.RequestHandler):
 
 class EntryHandler(tornado.web.RequestHandler):
     def post(self):
-        file1 = self.request.files['file1'][0]
-        f_name = file1['filename']
-        file_body = file1['body']
-        img = Image.open(StringIO.StringIO(file_body))
-        img.save(f_name)
-        db = sqlite3.connect('biodex')
-        cursor = db.cursor()
-        cursor.execute("IF COL_LENGTH('picture_table', 'name_column') IS NOT NULL")
+        self.write("hello")
         
 class PicturesHandler(tornado.web.RequestHandler):
     def get(self, name, item_id):
@@ -46,8 +39,16 @@ if __name__ == "__main__":
     name_column = 'name_column'
     column_type2 = 'TEXT'
     db = sqlite3.connect('biodex')
-    c = db.cursor()
-    c.execute('CREATE TABLE IF NOT EXISTS {pt} ({ic} {ct1} PRIMARY KEY)'.format(pt=picture_table, ic=id_column, ct1=column_type1))
+    c = db.cursor()  
+# Create table
+    c.execute('CREATE TABLE IF NOT EXISTS {pt} ({ic} {ct1} PRIMARY KEY)'.\
+        format(pt=picture_table, ic=id_column, ct1=column_type1))
+# Add name column
+    c.execute("IF COL_LENGTH('picture_table', 'name_column') IS NOT NULL")
+    c.execute("BEGIN")
+    c.execute("ALTER TABLE {pt} ADD COLUMN '{nc}' {ct2}".\
+        format(pt=picture_table, nc=name_column, ct2=column_type2)) 
+    c.execute("END")
     db.commit()
     db.close()
     app = main()
