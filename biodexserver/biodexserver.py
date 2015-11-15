@@ -73,7 +73,7 @@ class GetImageInfoHandler(tornado.web.RequestHandler):
         db = sqlite3.connect('biodex.db')
         c = db.cursor()
         c.execute("SELECT * FROM picture_table WHERE id = ?", (id,))
-        self.write(c.fetchone())
+        self.write(str(c.fetchone()))
         db.close()
 
 def main():

@@ -68,7 +68,7 @@ class PictureRangeHandler(tornado.web.RequestHandler):
             self.write(str(row))
         db.close()
 
-class GetImageInfo(tornado.web.RequestHandler):
+class GetImageInfoHandler(tornado.web.RequestHandler):
     def get(self, id):
         db = sqlite3.connect('biodex.db')
         c = db.cursor()
