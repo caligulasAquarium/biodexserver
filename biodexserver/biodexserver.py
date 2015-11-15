@@ -94,6 +94,14 @@ class GetImageInfoHandler(tornado.web.RequestHandler):
         c.execute("SELECT * FROM picture_table WHERE id = ?", (id,))
         self.write(c.fetchone())
         db.close()
+        
+class GetImageInfoNameHandler(tornado.web.RequestHandler):
+    def get(self, name):
+        db = sqlite3.connect('biodex.db')
+        c = db.cursor()
+        c. execute("SELECT * FROM picture_table WHERE name = ?", (name,))
+        self.write(c.fetchone())
+        db.close()    
 
 def main():
     return tornado.web.Application([
@@ -102,6 +110,7 @@ def main():
         (r"/pictures/(.+)/([0-9]+)", PicturesHandler),
         (r"/picturerange/([-.0-9][^a-z\s]+)/([-.0-9][^a-z\s]+)/([.0-9][^a-z\s]+)", PictureRangeHandler),
         (r"/getimageinfo/([0-9]+)", GetImageInfoHandler),
+        (r"/getimageinfoname/([\w]).+", GetImageInfoNameHandler),
 >>>>>>> Skate310/master
     ])
 
