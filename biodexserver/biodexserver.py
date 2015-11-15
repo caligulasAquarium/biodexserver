@@ -29,6 +29,25 @@ class EntryHandler(tornado.web.RequestHandler):
         
 class PicturesHandler(tornado.web.RequestHandler):
     def get(self, name, item_id):
+<<<<<<< HEAD
+        self.write("Hello " + name + " with id " + item_id)
+        db = sqlite3.connect('biodex')
+        c = db.cursor()
+# Add primary key into table      
+        try:
+            c.execute("SELECT {pt} ({ic}, {nc}), VALUES (item_id, name)".\
+                format(pt=picture_table, ic=id_column, nc=name_column))
+        except sqlite3.IntegrityError:
+            print('ERROR: ID already exists in PRIMARY KEY column {}'.format(id_column))      
+        db.commit()
+        db.close()
+        
+def main():
+    return tornado.web.Application([
+        (r"/", MainHandler),
+	(r"/addEntry/", EntryHandler),
+        (r"/pictures/(.+)/([0-9]+)", PicturesHandler), 
+=======
         db = sqlite3.connect('biodex.db')
         c = db.cursor()
         c.execute("SELECT file_path FROM picture_table WHERE id = ?", (item_id,))
@@ -73,8 +92,16 @@ class GetImageInfoHandler(tornado.web.RequestHandler):
         db = sqlite3.connect('biodex.db')
         c = db.cursor()
         c.execute("SELECT * FROM picture_table WHERE id = ?", (id,))
-        self.write(str(c.fetchone()))
+        self.write(c.fetchone())
         db.close()
+        
+class GetImageInfoNameHandler(tornado.web.RequestHandler):
+    def get(self, name):
+        db = sqlite3.connect('biodex.db')
+        c = db.cursor()
+        c. execute("SELECT * FROM picture_table WHERE name = ?", (name,))
+        self.write(c.fetchone())
+        db.close()    
 
 def main():
     return tornado.web.Application([
@@ -83,18 +110,29 @@ def main():
         (r"/pictures/(.+)/([0-9]+)", PicturesHandler),
         (r"/picturerange/([-.0-9][^a-z\s]+)/([-.0-9][^a-z\s]+)/([.0-9][^a-z\s]+)", PictureRangeHandler),
         (r"/getimageinfo/([0-9]+)", GetImageInfoHandler),
+        (r"/getimageinfoname/([\w]).+", GetImageInfoNameHandler),
+>>>>>>> Skate310/master
     ])
 
 if __name__ == "__main__":
     sqlite_file = 'biodex'
     picture_table = 'picture_table'
     id_column = 'id_column'
+<<<<<<< HEAD
+    name_column = 'name_column'
+    db = sqlite3.connect('biodex')
+    c = db.cursor()  
+# Create table (w/ columns)
+    c.execute('''CREATE TABLE IF NOT EXISTS picture_table
+                (id_column integer PRIMARY KEY, name text, file_path text, latitude real, longitude real)''') 
+=======
     column_type1 = 'INTEGER'
     name_column = 'name_column'
     column_type2 = 'TEXT'
     db = sqlite3.connect('biodex.db')
     c = db.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS picture_table (id INTEGER PRIMARY KEY, name TEXT, latitude REAL, longitude REAL, file_path TEXT, description TEXT)''')
+>>>>>>> Skate310/master
     db.commit()
     db.close()
     app = main()
